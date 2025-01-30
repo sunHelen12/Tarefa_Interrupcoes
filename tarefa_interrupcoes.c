@@ -129,20 +129,8 @@ void animaco_numeros(){
 
 //funcao principal
 int main(){
-    pio = pio0;
-    bool ok;
-    uint32_t valor_led;
-    double r = 0.0, b = 0.0, g = 1.0;
-
-    //configura o clock
-
-    //coloca a frequência de clock para 128 MHz, facilitando a divisão pelo clock
-    ok = set_sys_clock_khz(128000, false);
-
-    // Inicializa todos os códigos stdio padrão que estão ligados ao binário.
-    stdio_init_all();
-
-     PIO pio = pio0; 
+    
+    PIO pio = pio0; 
     bool ok;
     uint16_t i;
     uint32_t valor_led;
