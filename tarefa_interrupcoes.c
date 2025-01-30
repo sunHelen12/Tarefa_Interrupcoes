@@ -13,7 +13,7 @@
 #define NUM_PIXELS 25
 
 //pino de saída 
-#define OUT_PIN 19
+#define OUT_PIN 7
 
 //variáveis globais 
 PIO pio;
@@ -153,7 +153,6 @@ int main(){
 
     while (true){
        animaco_numeros();
-
     }
     
 }

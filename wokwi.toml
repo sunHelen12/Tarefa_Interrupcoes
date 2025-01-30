@@ -1,0 +1,5 @@
+[wokwi]
+version = 1
+firmware = 'build/tarefa_interrupcoes.uf2'
+elf = 'build/tarefa_interrupcoes.elf'
+gdbServerPort = 3333
