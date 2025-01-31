@@ -9,76 +9,77 @@
 //arquivo .pio
 #include "tarefa_interrupcoes.pio.h"
 
-//número de LEDs
-#define NUM_PIXELS 25
+#define NUM_PIXELS 25 //número de LEDs
+#define OUT_PIN 7 //pino de saída 
 
-//pino de saída 
-#define OUT_PIN 7
+//botões de interupção
+const uint button_0 = 5;
+const uint button_1 = 6;
 
 //variáveis globais 
 PIO pio;
 uint sm;
 
 //vetores com animação dos números
-double numero_zero[25] =    {1.0, 1.0, 1.0, 0.0, 0.0,
-                             1.0, 0.0, 1.0, 0.0, 0.0, 
-                             1.0, 0.0, 1.0, 0.0, 0.0,
-                             1.0, 0.0, 1.0, 0.0, 0.0,
-                             1.0, 1.0, 1.0, 0.0, 0.0};
+double numero_zero[25] =    {0.0, 0.0, 0.5, 0.5, 0.5,
+                             0.5, 0.0, 0.5, 0.0, 0.0, 
+                             0.0, 0.0, 0.5, 0.0, 0.5,
+                             0.5, 0.0, 0.5, 0.0, 0.0,
+                             0.0, 0.0, 0.5, 0.5, 0.5};
 
-double numero_um[25] =      {0.0, 1.0, 0.0, 0.0, 0.0,
-                             0.0, 1.0, 0.0, 0.0, 0.0, 
-                             0.0, 1.0, 0.0, 0.0, 0.0,
-                             0.0, 1.0, 0.0, 0.0, 0.0,
-                             0.0, 1.0, 0.0, 0.0, 0.0};
+double numero_um[25] =      {0.0, 0.0, 0.0, 0.0, 0.5,
+                             0.5, 0.0, 0.0, 0.0, 0.0, 
+                             0.0, 0.0, 0.0, 0.0, 0.5,
+                             0.5, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0.0, 0.0, 0.5};
 
-double numero_dois[25] =    {1.0, 1.0, 1.0, 0.0, 0.0,
-                             1.0, 0.0, 0.0, 0.0, 0.0, 
-                             1.0, 1.0, 1.0, 0.0, 0.0,
-                             0.0, 0.0, 1.0, 0.0, 0.0,
-                             1.0, 1.0, 1.0, 0.0, 0.0};  
+double numero_dois[25] =    {0.0, 0.0, 0.5, 0.5, 0.5,
+                             0.5, 0.0, 0.0, 0.0, 0.0, 
+                             0.0, 0.0, 0.5, 0.5, 0.5,
+                             0.0, 0.0, 0.5, 0.0, 0.0,
+                             0.0, 0.0, 0.5, 0.5, 0.5};  
 
-double numero_tres[25] =    {1.0, 1.0, 1.0, 0.0, 0.0,
-                             1.0, 0.0, 0.0, 0.0, 0.0, 
-                             1.0, 1.0, 1.0, 0.0, 0.0,
-                             1.0, 0.0, 0.0, 0.0, 0.0,
-                             1.0, 1.0, 1.0, 0.0, 0.0};  
+double numero_tres[25] =    {0.0, 0.0, 0.5, 0.5, 0.5,
+                             0.5, 0.0, 0.0, 0.0, 0.0, 
+                             0.0, 0.0, 0.5, 0.5, 0.5,
+                             0.5, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0.5, 0.5, 0.5};  
 
-double numero_quatro[25] =  {1.0, 0.0, 1.0, 0.0, 0.0,
-                             1.0, 0.0, 1.0, 0.0, 0.0, 
-                             1.0, 1.0, 1.0, 0.0, 0.0,
-                             1.0, 0.0, 0.0, 0.0, 0.0,
-                             1.0, 0.0, 0.0, 0.0, 0.0}; 
+double numero_quatro[25] =  {0.0, 0.0, 0.5, 0.0, 0.5,
+                             0.5, 0.0, 0.5, 0.0, 0.0, 
+                             0.0, 0.0, 0.5, 0.5, 0.5,
+                             0.5, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0.0, 0.0, 0.5}; 
 
-double numero_cinco[25] =  {1.0, 1.0, 1.0, 0.0, 0.0,
-                            0.0, 0.0, 1.0, 0.0, 0.0, 
-                            1.0, 1.0, 1.0, 0.0, 0.0,
-                            1.0, 0.0, 0.0, 0.0, 0.0,
-                            1.0, 1.0, 1.0, 0.0, 0.0}; 
+double numero_cinco[25] =  {0.0, 0.0, 0.5, 0.5, 0.5,
+                            0.0, 0.0, 0.5, 0.0, 0.0, 
+                            0.0, 0.0, 0.5, 0.5, 0.5,
+                            0.5, 0.0, 0.0, 0.0, 0.0,
+                            0.0, 0.0, 0.5, 0.5, 0.5}; 
 
-double numero_seis[25] =   {1.0, 1.0, 1.0, 0.0, 0.0,
-                            0.0, 0.0, 1.0, 0.0, 0.0, 
-                            1.0, 1.0, 1.0, 0.0, 0.0,
-                            1.0, 0.0, 1.0, 0.0, 0.0,
-                            1.0, 1.0, 1.0, 0.0, 0.0};
+double numero_seis[25] =   {0.0, 0.0, 0.5, 0.5, 0.5,
+                            0.0, 0.0, 0.5, 0.0, 0.0, 
+                            0.0, 0.0, 0.5, 0.5, 0.5,
+                            0.5, 0.0, 0.5, 0.0, 0.0,
+                            0.0, 0.0, 0.5, 0.5, 0.5};
                              
-double numero_sete[25] =   {1.0, 1.0, 1.0, 0.0, 0.0,
-                            1.0, 0.0, 1.0, 0.0, 0.0, 
-                            1.0, 0.0, 0.0, 0.0, 0.0,
-                            1.0, 0.0, 0.0, 0.0, 0.0,
-                            1.0, 0.0, 0.0, 0.0, 0.0};
+double numero_sete[25] =   {0.0, 0.0, 0.5, 0.5, 0.5,
+                            0.5, 0.0, 0.5, 0.0, 0.0, 
+                            0.0, 0.0, 0.0, 0.0, 0.5,
+                            0.5, 0.0, 0.0, 0.0, 0.0,
+                            0.0, 0.0, 0.0, 0.0, 0.5};
 
-double numero_oito[25] =   {1.0, 1.0, 1.0, 0.0, 0.0,
-                            1.0, 0.0, 1.0, 0.0, 0.0, 
-                            1.0, 1.0, 1.0, 0.0, 0.0,
-                            1.0, 0.0, 1.0, 0.0, 0.0,
-                            1.0, 1.0, 1.0, 0.0, 0.0};
+double numero_oito[25] =   {0.0, 0.0, 0.5, 0.5, 0.5,
+                            0.5, 0.0, 0.5, 0.0, 0.0, 
+                            0.0, 0.0, 0.5, 0.5, 0.5,
+                            0.5, 0.0, 0.5, 0.0, 0.0,
+                            0.0, 0.0, 0.5, 0.5, 0.5};
 
-double numero_nove[25] =   {1.0, 1.0, 1.0, 0.0, 0.0,
-                            1.0, 0.0, 1.0, 0.0, 0.0, 
-                            1.0, 1.0, 1.0, 0.0, 0.0,
-                            1.0, 0.0, 0.0, 0.0, 0.0,
-                            1.0, 1.0, 1.0, 0.0, 0.0};
+double numero_nove[25] =   {0.0, 0.0, 0.5, 0.5, 0.5,
+                            0.5, 0.0, 0.5, 0.0, 0.0, 
+                            0.0, 0.0, 0.5, 0.5, 0.5,
+                            0.5, 0.0, 0.0, 0.0, 0.0,
+                            0.0, 0.0, 0.5, 0.5, 0.5};
 
 //rotina pra definição de cores do led
 uint32_t matrix_rgb(double r, double g, double b){
@@ -91,51 +92,45 @@ uint32_t matrix_rgb(double r, double g, double b){
 
 //rotina para acionar a matriz de LEDs - ws2812b
 //adiciona a cor aos LEDs
-void desenho_pio(double *desenho, int cor){
+void desenho_pio(double *desenho){
     uint32_t valor_led;
-    if(cor == 1) {//LEDs cor verde
-        for (int16_t i = 0; i < NUM_PIXELS; i++){
-            uint32_t valor_led = matrix_rgb(0.0, desenho[24 - i], 0.0);
-            pio_sm_put_blocking(pio, sm, valor_led);
-        }
-    }else if(cor == 2) {
-       for (int16_t i = 0; i < NUM_PIXELS; i++){
-            valor_led = matrix_rgb(0.0, desenho[24 - i], desenho[24 - i]);
-            pio_sm_put_blocking(pio, sm, valor_led);
-        } 
+    for (int16_t i = 0; i < NUM_PIXELS; i++){
+        valor_led = matrix_rgb(desenho[24 - i], 0.0, desenho[24 - i]);
+        pio_sm_put_blocking(pio, sm, valor_led);
     }
 }
 
 void animaco_numeros(){
-    desenho_pio(numero_zero, 1);
-    sleep_ms(200);
-    desenho_pio(numero_um, 2);
-    sleep_ms(200);
-    desenho_pio(numero_tres, 1);
-    sleep_ms(200);
-    desenho_pio(numero_quatro, 2);
-    sleep_ms(200);
-    desenho_pio(numero_cinco, 1);
-    sleep_ms(200);
-    desenho_pio(numero_seis, 2);
-    sleep_ms(200);
-    desenho_pio(numero_sete, 1);
-    sleep_ms(200);
-    desenho_pio(numero_oito, 2);
-    sleep_ms(200);
-    desenho_pio(numero_nove, 1);
+    desenho_pio(numero_zero);
+    sleep_ms(2000);
+    desenho_pio(numero_um);
+    sleep_ms(2000);
+    desenho_pio(numero_dois); 
+    sleep_ms(2000);   
+    desenho_pio(numero_tres);
+    sleep_ms(2000);
+    desenho_pio(numero_quatro);
+    sleep_ms(2000);
+    desenho_pio(numero_cinco);
+    sleep_ms(2000);
+    desenho_pio(numero_seis);
+    sleep_ms(2000);
+    desenho_pio(numero_sete);
+    sleep_ms(2000);
+    desenho_pio(numero_oito);
+    sleep_ms(2000);
+    desenho_pio(numero_nove);
+    sleep_ms(2000);
 }
 
 
 //funcao principal
 int main(){
-    
-    PIO pio = pio0; 
+    pio = pio0; 
     bool ok;
     uint16_t i;
     uint32_t valor_led;
-    double r = 0.0, b = 0.0 , g = 0.0;
-
+    
     //coloca a frequência de clock para 128 MHz, facilitando a divisão pelo clock
     ok = set_sys_clock_khz(128000, false);
 
@@ -147,7 +142,7 @@ int main(){
 
     //configurações da PIO
     uint offset = pio_add_program(pio, &tarefa_interrupcoes_program);
-    uint sm = pio_claim_unused_sm(pio, true);
+    sm = pio_claim_unused_sm(pio, true);
     tarefa_interrupcoes_program_init(pio, sm, offset, OUT_PIN);
    
 
