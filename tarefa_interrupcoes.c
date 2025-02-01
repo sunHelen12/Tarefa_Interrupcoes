@@ -16,9 +16,15 @@
 //LED RGB
 #define LED_RED 13 //LED vermelho conectado ao GPIO 13
 
+//tempo para LED vermelho piscar
+#define TEMPO 5000 // LED vai piscar de 5 em 5 segundos 
+
 //botões de interupção
 #define BUTTON_0  5 //botão A - GPIO 5
 #define BUTTON_1  6 //botão B - GPIO 6
+
+//prototipo da função de interrupção
+static void gpio_irq_handler(uint gpio, uint32_t events);
 
 //variáveis globais 
 PIO pio;
@@ -85,6 +91,14 @@ double numero_nove[25] =   {0.0, 0.0, 0.5, 0.5, 0.5,
                             0.5, 0.0, 0.0, 0.0, 0.0,
                             0.0, 0.0, 0.5, 0.5, 0.5};
 
+// funcao para LED piscar de 5 em 5 segundos
+void led_red(){
+    gpio_put(LED_RED, 1); //ligar LED
+    sleep_ms(TEMPO);
+    gpio_put(LED_RED, 0);
+    
+};
+
 //rotina pra definição de cores do led
 uint32_t matrix_rgb(double r, double g, double b){
     unsigned char R, G, B;
@@ -104,28 +118,7 @@ void desenho_pio(double *desenho){
     }
 }
 
-void animaco_numeros(){
-    desenho_pio(numero_zero);
-    sleep_ms(2000);
-    desenho_pio(numero_um);
-    sleep_ms(2000);
-    desenho_pio(numero_dois); 
-    sleep_ms(2000);   
-    desenho_pio(numero_tres);
-    sleep_ms(2000);
-    desenho_pio(numero_quatro);
-    sleep_ms(2000);
-    desenho_pio(numero_cinco);
-    sleep_ms(2000);
-    desenho_pio(numero_seis);
-    sleep_ms(2000);
-    desenho_pio(numero_sete);
-    sleep_ms(2000);
-    desenho_pio(numero_oito);
-    sleep_ms(2000);
-    desenho_pio(numero_nove);
-    sleep_ms(2000);
-}
+
 
 //função principal
 int main(){
@@ -150,8 +143,7 @@ int main(){
 
     //inicializando LED e botões
     gpio_init(LED_RED); //inicializa o LED Vermelho
-    gpio_set_dir(LED_RED, GPIO_OUT); //configura como saída
-    gpio_put(LED_RED, 0); //inicia como apagado
+    gpio_set_dir(LED_RED, GPIO_OUT); //configura como saída    
 
     gpio_init(BUTTON_0); // inicializa o Button
     gpio_set_dir(BUTTON_0, GPIO_IN); //configura como entrada
@@ -161,9 +153,14 @@ int main(){
     gpio_set_dir(BUTTON_1, GPIO_IN); //configura como entrada
     gpio_pull_up(BUTTON_1); //configura resistor pull-up interno para pino GPIO
    
-    //configuração de interrupção com callback
-    gpio_set_irq_enable_with_callback(BUTTON_0, GPIO_IRQ_EDGE_FALL, true, &gpio_irq_handler);   
+    //configuração de interrupção com callback para os botões
+    gpio_set_irq_enabled_with_callback(BUTTON_0, GPIO_IRQ_EDGE_FALL, true, &gpio_irq_handler);   
+    gpio_set_irq_enabled_with_callback(BUTTON_1, GPIO_IRQ_EDGE_FALL, true, &gpio_irq_handler);
     
+
+    while (true){
+        led_red();
+    }
 }
 
 //função de interrupção 
