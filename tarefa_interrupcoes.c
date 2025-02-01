@@ -96,7 +96,7 @@ void led_red(){
     gpio_put(LED_RED, 1); //ligar LED
     sleep_ms(TEMPO);
     gpio_put(LED_RED, 0);
-    
+    sleep_ms(TEMPO);   
 };
 
 //rotina pra definição de cores do led
@@ -117,8 +117,6 @@ void desenho_pio(double *desenho){
         pio_sm_put_blocking(pio, sm, valor_led);
     }
 }
-
-
 
 //função principal
 int main(){
