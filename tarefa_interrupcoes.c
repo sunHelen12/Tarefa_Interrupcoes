@@ -29,68 +29,71 @@ static void gpio_irq_handler(uint gpio, uint32_t events);
 //variáveis globais 
 PIO pio;
 uint sm;
-volatile int numero_atual = 0; // variavel volátil que pode ser alterada
+//variáveis globais para interrupcao e deboucing
+static volatile uint numero_atual = 0; //variavel volátil que pode ser alterada - interrupcao
+static volatile uint a = 1; //vai incrementar as vezes que o botão será apertado
+static volatile uint32_t last_time = 0; //armazena o último evento de temo (microssegundos)
 
 //vetores com animação dos números
-double numero_zero[25] =    {0.0, 0.0, 0.5, 0.5, 0.5,
-                             0.5, 0.0, 0.5, 0.0, 0.0, 
-                             0.0, 0.0, 0.5, 0.0, 0.5,
-                             0.5, 0.0, 0.5, 0.0, 0.0,
-                             0.0, 0.0, 0.5, 0.5, 0.5};
+double numero_zero[25] =    {0.0, 0.0, 0.3, 0.3, 0.3,
+                             0.3, 0.0, 0.3, 0.0, 0.0, 
+                             0.0, 0.0, 0.3, 0.0, 0.3,
+                             0.3, 0.0, 0.3, 0.0, 0.0,
+                             0.0, 0.0, 0.3, 0.3, 0.3};
 
-double numero_um[25] =      {0.0, 0.0, 0.0, 0.0, 0.5,
-                             0.5, 0.0, 0.0, 0.0, 0.0, 
-                             0.0, 0.0, 0.0, 0.0, 0.5,
-                             0.5, 0.0, 0.0, 0.0, 0.0,
-                             0.0, 0.0, 0.0, 0.0, 0.5};
+double numero_um[25] =      {0.0, 0.0, 0.0, 0.0, 0.3,
+                             0.3, 0.0, 0.0, 0.0, 0.0, 
+                             0.0, 0.0, 0.0, 0.0, 0.3,
+                             0.3, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0.0, 0.0, 0.3};
 
-double numero_dois[25] =    {0.0, 0.0, 0.5, 0.5, 0.5,
-                             0.5, 0.0, 0.0, 0.0, 0.0, 
-                             0.0, 0.0, 0.5, 0.5, 0.5,
+double numero_dois[25] =    {0.0, 0.0, 0.3, 0.3, 0.3,
+                             0.3, 0.0, 0.0, 0.0, 0.0, 
+                             0.0, 0.0, 0.5, 0.3, 0.3,
                              0.0, 0.0, 0.5, 0.0, 0.0,
-                             0.0, 0.0, 0.5, 0.5, 0.5};  
+                             0.0, 0.0, 0.3, 0.3, 0.3};  
 
-double numero_tres[25] =    {0.0, 0.0, 0.5, 0.5, 0.5,
-                             0.5, 0.0, 0.0, 0.0, 0.0, 
-                             0.0, 0.0, 0.5, 0.5, 0.5,
-                             0.5, 0.0, 0.0, 0.0, 0.0,
-                             0.0, 0.0, 0.5, 0.5, 0.5};  
+double numero_tres[25] =    {0.0, 0.0, 0.3, 0.3, 0.3,
+                             0.3, 0.0, 0.0, 0.0, 0.0, 
+                             0.0, 0.0, 0.3, 0.3, 0.3,
+                             0.3, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0.3, 0.3, 0.3};  
 
-double numero_quatro[25] =  {0.0, 0.0, 0.5, 0.0, 0.5,
-                             0.5, 0.0, 0.5, 0.0, 0.0, 
-                             0.0, 0.0, 0.5, 0.5, 0.5,
-                             0.5, 0.0, 0.0, 0.0, 0.0,
-                             0.0, 0.0, 0.0, 0.0, 0.5}; 
+double numero_quatro[25] =  {0.0, 0.0, 0.3, 0.0, 0.3,
+                             0.3, 0.0, 0.3, 0.0, 0.0, 
+                             0.0, 0.0, 0.3, 0.3, 0.3,
+                             0.3, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0.0, 0.0, 0.3}; 
 
-double numero_cinco[25] =  {0.0, 0.0, 0.5, 0.5, 0.5,
-                            0.0, 0.0, 0.5, 0.0, 0.0, 
-                            0.0, 0.0, 0.5, 0.5, 0.5,
-                            0.5, 0.0, 0.0, 0.0, 0.0,
-                            0.0, 0.0, 0.5, 0.5, 0.5}; 
+double numero_cinco[25] =  {0.0, 0.0, 0.3, 0.3, 0.3,
+                            0.0, 0.0, 0.3, 0.0, 0.0, 
+                            0.0, 0.0, 0.3, 0.3, 0.3,
+                            0.3, 0.0, 0.0, 0.0, 0.0,
+                            0.0, 0.0, 0.3, 0.3, 0.3}; 
 
-double numero_seis[25] =   {0.0, 0.0, 0.5, 0.5, 0.5,
-                            0.0, 0.0, 0.5, 0.0, 0.0, 
-                            0.0, 0.0, 0.5, 0.5, 0.5,
-                            0.5, 0.0, 0.5, 0.0, 0.0,
-                            0.0, 0.0, 0.5, 0.5, 0.5};
+double numero_seis[25] =   {0.0, 0.0, 0.3, 0.3, 0.3,
+                            0.0, 0.0, 0.3, 0.0, 0.0, 
+                            0.0, 0.0, 0.3, 0.3, 0.3,
+                            0.3, 0.0, 0.3, 0.0, 0.0,
+                            0.0, 0.0, 0.3, 0.3, 0.3};
                              
-double numero_sete[25] =   {0.0, 0.0, 0.5, 0.5, 0.5,
-                            0.5, 0.0, 0.5, 0.0, 0.0, 
-                            0.0, 0.0, 0.0, 0.0, 0.5,
-                            0.5, 0.0, 0.0, 0.0, 0.0,
-                            0.0, 0.0, 0.0, 0.0, 0.5};
+double numero_sete[25] =   {0.0, 0.0, 0.3, 0.3, 0.3,
+                            0.3, 0.0, 0.3, 0.0, 0.0, 
+                            0.0, 0.0, 0.0, 0.0, 0.3,
+                            0.3, 0.0, 0.0, 0.0, 0.0,
+                            0.0, 0.0, 0.0, 0.0, 0.3};
 
-double numero_oito[25] =   {0.0, 0.0, 0.5, 0.5, 0.5,
-                            0.5, 0.0, 0.5, 0.0, 0.0, 
-                            0.0, 0.0, 0.5, 0.5, 0.5,
-                            0.5, 0.0, 0.5, 0.0, 0.0,
-                            0.0, 0.0, 0.5, 0.5, 0.5};
+double numero_oito[25] =   {0.0, 0.0, 0.3, 0.3, 0.3,
+                            0.3, 0.0, 0.3, 0.0, 0.0, 
+                            0.0, 0.0, 0.3, 0.3, 0.3,
+                            0.3, 0.0, 0.3, 0.0, 0.0,
+                            0.0, 0.0, 0.3, 0.3, 0.3};
 
-double numero_nove[25] =   {0.0, 0.0, 0.5, 0.5, 0.5,
-                            0.5, 0.0, 0.5, 0.0, 0.0, 
-                            0.0, 0.0, 0.5, 0.5, 0.5,
-                            0.5, 0.0, 0.0, 0.0, 0.0,
-                            0.0, 0.0, 0.5, 0.5, 0.5};
+double numero_nove[25] =   {0.0, 0.0, 0.3, 0.3, 0.3,
+                            0.3, 0.0, 0.3, 0.0, 0.0, 
+                            0.0, 0.0, 0.3, 0.3, 0.3,
+                            0.3, 0.0, 0.0, 0.0, 0.0,
+                            0.0, 0.0, 0.3, 0.3, 0.3};
 
 // guardando todos os números em um vetor
 double *numeros [10] = {
@@ -161,7 +164,6 @@ int main(){
     //configuração de interrupção com callback para os botões
     gpio_set_irq_enabled_with_callback(BUTTON_0, GPIO_IRQ_EDGE_FALL, true, &gpio_irq_handler);   
     gpio_set_irq_enabled_with_callback(BUTTON_1, GPIO_IRQ_EDGE_FALL, true, &gpio_irq_handler);
-    
 
     while (true){
         led_red();
@@ -170,5 +172,26 @@ int main(){
 
 //função de interrupção 
 void gpio_irq_handler(uint gpio, uint32_t events){
+    //armazena o tempo atual em microssegundos
+    uint32_t current_time = to_us_since_boot(get_absolute_time());
+    //será verificado se o tempo que passou foi suficiente desde o último evento 
+    if (current_time - last_time > 200000){ //200ms de deboucing
+        if (gpio == BUTTON_0){
+            numero_atual = (numero_atual + 1) % 10; //vai acrescentar um ao número atual e o
+                                                    // %10 fará com que esse número fique entre 0 e 9
+            printf("Número Alterado! A = %d\n", a); 
+            a++; //incrementa o contador de pressionamentos de botão
+        }
 
+        if (gpio == BUTTON_1){
+            numero_atual = (numero_atual - 1  + 10) % 10; //vai diminuir um número do número atual e somar com 
+                                                        //10 para que ele não fique negativoro 
+                                                        // %10 fará com que esse número fique entre 0 e 9
+            printf("Número Alterado! A = %d\n", a); //
+            a++; //incrementa o contador de pressionamentos de botão
+        }
+        last_time = current_time; //atualizar o tempo
+    }
+    //atualiza a matriz com o novo número e implementa a cor do LEDs
+    desenho_pio(numeros[numero_atual]);
 }
