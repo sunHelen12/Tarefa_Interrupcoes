@@ -9,12 +9,16 @@
 //arquivo .pio
 #include "tarefa_interrupcoes.pio.h"
 
+//matriz de LEDs
 #define NUM_PIXELS 25 //número de LEDs
 #define OUT_PIN 7 //pino de saída 
 
+//LED RGB
+#define LED_RED 13 //LED vermelho conectado ao GPIO 13
+
 //botões de interupção
-const uint button_0 = 5;
-const uint button_1 = 6;
+const uint BUTTON_0 = 5; //botão A - GPIO 5
+const uint BUTTON_1 = 6; //botão B - GPIO 6
 
 //variáveis globais 
 PIO pio;
@@ -123,7 +127,6 @@ void animaco_numeros(){
     sleep_ms(2000);
 }
 
-
 //funcao principal
 int main(){
     pio = pio0; 
@@ -144,6 +147,19 @@ int main(){
     uint offset = pio_add_program(pio, &tarefa_interrupcoes_program);
     sm = pio_claim_unused_sm(pio, true);
     tarefa_interrupcoes_program_init(pio, sm, offset, OUT_PIN);
+
+    //inicializando LED e botões
+    gpio_init(LED_RED); //inicializa o LED Vermelho
+    gpio_set_dir(LED_RED, GPIO_OUT); //configura como saída
+    gpio_put(LED_RED, 0); //inicia como apagado
+
+    gpio_init(BUTTON_0); // inicializa o Button
+    gpio_set_dir(BUTTON_0, GPIO_IN); //configura como entrada
+    gpio_pull_up(BUTTON_0); //configura resistor pull-up para pino GPIO
+
+    gpio_init(BUTTON_1); //inicializa o Button
+    gpio_set_dir(BUTTON_1, GPIO_IN); //configura como entrada
+    gpio_pull_up(BUTTON_1); //configura resistor pull-up para pino GPIO
    
 
     while (true){
