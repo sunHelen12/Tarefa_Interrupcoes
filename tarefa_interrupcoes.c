@@ -17,8 +17,8 @@
 #define LED_RED 13 //LED vermelho conectado ao GPIO 13
 
 //botões de interupção
-const uint BUTTON_0 = 5; //botão A - GPIO 5
-const uint BUTTON_1 = 6; //botão B - GPIO 6
+#define BUTTON_0  5 //botão A - GPIO 5
+#define BUTTON_1  6 //botão B - GPIO 6
 
 //variáveis globais 
 PIO pio;
@@ -99,7 +99,7 @@ uint32_t matrix_rgb(double r, double g, double b){
 void desenho_pio(double *desenho){
     uint32_t valor_led;
     for (int16_t i = 0; i < NUM_PIXELS; i++){
-        valor_led = matrix_rgb(desenho[24 - i], 0.0, desenho[24 - i]);
+        valor_led = matrix_rgb(desenho[24 - i], 0.0, desenho[24 - i]); //adiciona a cor roxa aos LEDs
         pio_sm_put_blocking(pio, sm, valor_led);
     }
 }
@@ -127,7 +127,7 @@ void animaco_numeros(){
     sleep_ms(2000);
 }
 
-//funcao principal
+//função principal
 int main(){
     pio = pio0; 
     bool ok;
@@ -137,7 +137,7 @@ int main(){
     //coloca a frequência de clock para 128 MHz, facilitando a divisão pelo clock
     ok = set_sys_clock_khz(128000, false);
 
-    // Inicializa todos os códigos stdio padrão que estão ligados ao binário.
+    //inicializa todos os códigos stdio padrão que estão ligados ao binário.
     stdio_init_all();
 
     printf("iniciando a transmissão PIO");
@@ -159,11 +159,14 @@ int main(){
 
     gpio_init(BUTTON_1); //inicializa o Button
     gpio_set_dir(BUTTON_1, GPIO_IN); //configura como entrada
-    gpio_pull_up(BUTTON_1); //configura resistor pull-up para pino GPIO
+    gpio_pull_up(BUTTON_1); //configura resistor pull-up interno para pino GPIO
    
-
-    while (true){
-       animaco_numeros();
-    }
+    //configuração de interrupção com callback
+    gpio_set_irq_enable_with_callback(BUTTON_0, GPIO_IRQ_EDGE_FALL, true, &gpio_irq_handler);   
     
+}
+
+//função de interrupção 
+void gpio_irq_handler(uint gpio, uint32_t events){
+
 }
