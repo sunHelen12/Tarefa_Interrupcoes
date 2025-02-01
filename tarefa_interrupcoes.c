@@ -29,6 +29,7 @@ static void gpio_irq_handler(uint gpio, uint32_t events);
 //variáveis globais 
 PIO pio;
 uint sm;
+volatile int numero_atual = 0; // variavel volátil que pode ser alterada
 
 //vetores com animação dos números
 double numero_zero[25] =    {0.0, 0.0, 0.5, 0.5, 0.5,
@@ -90,6 +91,12 @@ double numero_nove[25] =   {0.0, 0.0, 0.5, 0.5, 0.5,
                             0.0, 0.0, 0.5, 0.5, 0.5,
                             0.5, 0.0, 0.0, 0.0, 0.0,
                             0.0, 0.0, 0.5, 0.5, 0.5};
+
+// guardando todos os números em um vetor
+double *numeros [10] = {
+    numero_zero, numero_um, numero_dois, numero_tres, numero_quatro,
+    numero_cinco, numero_seis, numero_sete, numero_oito, numero_nove
+};
 
 // funcao para LED piscar de 5 em 5 segundos
 void led_red(){
