@@ -184,6 +184,6 @@ void gpio_irq_handler(uint gpio, uint32_t events){
         }
         last_time = current_time; //atualizar o tempo
     }
-    //atualiza a matriz com o novo número e implementa as cores dos LEDs
+    //atualiza a matriz com o novo número e implementa a cor dos LEDs (roxa)
     desenho_pio(numeros[numero_atual]);
 }
