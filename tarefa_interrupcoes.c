@@ -17,7 +17,7 @@
 #define LED_RED 13 //LED vermelho conectado ao GPIO 13
 
 //tempo para LED vermelho piscar
-#define TEMPO 5000 // LED vai piscar de 5 em 5 segundos 
+#define TEMPO 100 // LED vai piscar 5 vezes por segundo
 
 //botões de interupção
 #define BUTTON_0  5 //botão A - GPIO 5
@@ -101,12 +101,12 @@ double *numeros [10] = {
     numero_cinco, numero_seis, numero_sete, numero_oito, numero_nove
 };
 
-// funcao para LED piscar de 5 em 5 segundos
+// rotina para LED piscar de 5 vezes por segundo
 void led_red(){
     gpio_put(LED_RED, 1); //ligar LED
-    sleep_ms(TEMPO);
-    gpio_put(LED_RED, 0);
-    sleep_ms(TEMPO);   
+    sleep_ms(TEMPO); //tempo que o LED vai ficar ligado
+    gpio_put(LED_RED, 0); //desligar LED
+    sleep_ms(TEMPO); //tempo que o LED vai ficar desligado
 };
 
 //rotina pra definição de cores do led
@@ -128,21 +128,11 @@ void desenho_pio(double *desenho){
     }
 }
 
-//função principal
+//rotina principal
 int main(){
-    pio = pio0; 
-    bool ok;
-    uint16_t i;
-    uint32_t valor_led;
-    
-    //coloca a frequência de clock para 128 MHz, facilitando a divisão pelo clock
-    ok = set_sys_clock_khz(128000, false);
-
-    //inicializa todos os códigos stdio padrão que estão ligados ao binário.
+    pio = pio0; // para carregarmos nossa PIO
+    //inicializa todos os códigos stdio padrão que estão ligados ao binário
     stdio_init_all();
-
-    printf("iniciando a transmissão PIO");
-    if (ok) printf("clock set to %ld\n", clock_get_hz(clk_sys));
 
     //configurações da PIO
     uint offset = pio_add_program(pio, &tarefa_interrupcoes_program);
@@ -164,20 +154,22 @@ int main(){
     //configuração de interrupção com callback para os botões
     gpio_set_irq_enabled_with_callback(BUTTON_0, GPIO_IRQ_EDGE_FALL, true, &gpio_irq_handler);   
     gpio_set_irq_enabled_with_callback(BUTTON_1, GPIO_IRQ_EDGE_FALL, true, &gpio_irq_handler);
-
+    
+    //loop para o led piscar 
     while (true){
         led_red();
     }
+    
 }
 
-//função de interrupção 
+//rotina de interrupção 
 void gpio_irq_handler(uint gpio, uint32_t events){
     //armazena o tempo atual em microssegundos
     uint32_t current_time = to_us_since_boot(get_absolute_time());
     //será verificado se o tempo que passou foi suficiente desde o último evento 
     if (current_time - last_time > 200000){ //200ms de deboucing
         if (gpio == BUTTON_0){
-            numero_atual = (numero_atual + 1) % 10; //vai acrescentar um ao número atual e o
+            numero_atual = (numero_atual + 1) % 10; //vai acrescentar um ao número atual 
                                                     // %10 fará com que esse número fique entre 0 e 9
             printf("Número Alterado! A = %d\n", a); 
             a++; //incrementa o contador de pressionamentos de botão
@@ -185,13 +177,13 @@ void gpio_irq_handler(uint gpio, uint32_t events){
 
         if (gpio == BUTTON_1){
             numero_atual = (numero_atual - 1  + 10) % 10; //vai diminuir um número do número atual e somar com 
-                                                        //10 para que ele não fique negativoro 
+                                                        //10 para que ele não fique negativo 
                                                         // %10 fará com que esse número fique entre 0 e 9
             printf("Número Alterado! A = %d\n", a); //
             a++; //incrementa o contador de pressionamentos de botão
         }
         last_time = current_time; //atualizar o tempo
     }
-    //atualiza a matriz com o novo número e implementa a cor do LEDs
+    //atualiza a matriz com o novo número e implementa as cores dos LEDs
     desenho_pio(numeros[numero_atual]);
 }
