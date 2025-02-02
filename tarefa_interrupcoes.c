@@ -1,10 +1,10 @@
 #include <stdio.h>       //biblioteca padrão para entrada e saída (printf, scanf, etc.)
 #include <stdlib.h>      //biblioteca padrão para alocação de memória, controle de processos, etc.
 #include <pico/stdlib.h> //biblioteca da Raspberry Pi Pico para funções básicas (GPIO, UART, delays, etc.)
-#include "hardware/pio.h"      // biblioteca para manipulação do PIO (Programmable Input/Output)
-#include "hardware/clocks.h"   // biblioteca para configuração dos clocks do microcontrolador
-#include "hardware/adc.h"      // biblioteca para uso do ADC (Conversor Analógico-Digital)
-#include "pico/bootrom.h"      // biblioteca para acessar funções de boot, como reinicializar no modo de bootloader
+#include "hardware/pio.h"      //biblioteca para manipulação do PIO (Programmable Input/Output)
+#include "hardware/clocks.h"   //biblioteca para configuração dos clocks do microcontrolador
+#include "hardware/adc.h"      //biblioteca para uso do ADC (Conversor Analógico-Digital)
+#include "pico/bootrom.h"      //biblioteca para acessar funções de boot, como reinicializar no modo de bootloader
 
 //arquivo .pio
 #include "tarefa_interrupcoes.pio.h"
