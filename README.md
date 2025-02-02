@@ -45,5 +45,29 @@ Há também um sistema de debounce para evitar leituras errôneas.</p>
 <img src="assets/3.gif" width="500" height="300">
 <p><i>LED RGB cor vermelho</i></p>
 
-
-
+  <h2>Como Executar o Projeto</h2>
+        <h2>Clone o Repositório</h2>
+    <ol>
+        <li>Abra o <strong>Prompt de Comando</strong> ou o terminal de sua preferência.</li>
+        <li>Clone o repositório usando o Git:
+            <pre><code>git clone https://github.com/seu-usuario/seu-repositorio.git</code></pre>
+        </li>
+        <li>Entre no diretório do projeto:
+            <pre><code>cd seu-repositorio</code></pre>
+        </li>
+    </ol>
+ <h2>Configuração do Ambiente Local</h2>
+    <ol>
+        <li>Baixe e instale o <a href="https://cmake.org/download/" target="_blank">CMake</a>.</li>
+        <li>Configure o <strong>Pico SDK</strong> seguindo o guia oficial em 
+            <a href="https://datasheets.raspberrypi.com/pico/raspberry-pi-pico-c-sdk.pdf" target="_blank">
+                Raspberry Pi Pico SDK</a>.
+        </li>
+        <li>Crie um diretório de construção:
+            <pre><code>mkdir build</code></pre>
+            <pre><code>cd build</code></pre>
+        </li>
+        <li>Execute o CMake para gerar os arquivos de construção:
+            <pre><code>cmake ..</code></pre>
+        </li>
+    </ol>
