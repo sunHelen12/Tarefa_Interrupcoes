@@ -36,12 +36,14 @@ Há também um sistema de debounce para evitar leituras errôneas.</p>
 
 <h2>Demonstração</h2>
 
-![Demonstração](assets/1.gif)
+<img src="assets/1.gif" width="500" height="300">
+<p><i>Incrementação - Botão A</i></p>
 
-![Demonstração](assets/2.gif)
+<img src="assets/2.gif" width="500" height="300">
+<p><i>Decrementação - Botão B</i></p>
 
-![Demonstração](assets/3.gif)
-
+<img src="assets/3.gif" width="500" height="300">
+<p><i>LED RGB cor vermelho</i></p>
 
 
 
