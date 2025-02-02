@@ -51,8 +51,7 @@ target_sources(tarefa_interrupcoes PRIVATE tarefa_interrupcoes.c)
 # Add the standard library to the build
 target_link_libraries(tarefa_interrupcoes PRIVATE
         pico_stdlib
-        hardware_pio
-        hardware_clocks
+        hardware_pio        
 	    hardware_adc
         pico_bootrom)
 
