@@ -36,6 +36,9 @@ Há também um sistema de debounce para evitar leituras errôneas.</p>
 
 <h2>Demonstração</h2>
 
+![Demonstração](assets/matriz.gif)
+
+![Demonstração](assets/matriz2.gif)
 
 
 
