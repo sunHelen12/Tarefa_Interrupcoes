@@ -131,8 +131,16 @@ void desenho_pio(double *desenho){
 //rotina principal
 int main(){
     pio = pio0; // para carregarmos nossa PIO
+    bool ok;
+
+    //coloca a frequência de clock para 128 MHz, facilitando a divisão pelo clock
+    ok = set_sys_clock_khz(128000, false);
+
     //inicializa todos os códigos stdio padrão que estão ligados ao binário
     stdio_init_all();
+    
+    printf("iniciando a transmissão PIO");
+    if (ok) printf("clock set to %ld\n", clock_get_hz(clk_sys));
 
     //configurações da PIO
     uint offset = pio_add_program(pio, &tarefa_interrupcoes_program);
@@ -154,7 +162,10 @@ int main(){
     //configuração de interrupção com callback para os botões
     gpio_set_irq_enabled_with_callback(BUTTON_0, GPIO_IRQ_EDGE_FALL, true, &gpio_irq_handler);   
     gpio_set_irq_enabled_with_callback(BUTTON_1, GPIO_IRQ_EDGE_FALL, true, &gpio_irq_handler);
-    
+
+    sleep_ms(500);
+    printf("\nfrequeência de clock %ld\r\n", clock_get_hz(clk_sys));
+            
     //loop para o led piscar 
     while (true){
         led_red();
