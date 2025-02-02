@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <pico/stdlib.h>
 #include "hardware/pio.h"
+#include "hardware/clocks.h"
 #include "hardware/adc.h"
 #include "pico/bootrom.h"
 
