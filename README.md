@@ -29,10 +29,8 @@ Há também um sistema de debounce para evitar leituras errôneas.</p>
 </ul>
 
 <h2>Vídeo</h2>
-<p>Vídeo no Drive: </p>
-<p>https://drive.google.com/file/d/1eHIh1nfqicTTv6n3bG0wVoVCTjvF96Yg/view?usp=sharing</p>
-<p>Vídeo no YouTube</p>
-<p>https://youtu.be/7FVu9zKdY_A</p>
+<p>Vídeo no Drive: https://drive.google.com/file/d/1eHIh1nfqicTTv6n3bG0wVoVCTjvF96Yg/view?usp=sharing</p>
+<p>Vídeo no YouTube: https://youtu.be/7FVu9zKdY_A</p>
 
 <h2>Demonstração</h2>
 
