@@ -36,9 +36,11 @@ Há também um sistema de debounce para evitar leituras errôneas.</p>
 
 <h2>Demonstração</h2>
 
-![Demonstração](assets/matriz.gif)
+![Demonstração](assets/1.gif)
 
-![Demonstração](assets/matriz2.gif)
+![Demonstração](assets/2.gif)
+
+![Demonstração](assets/3.gif)
 
 
 
