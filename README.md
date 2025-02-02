@@ -30,9 +30,9 @@ Há também um sistema de debounce para evitar leituras errôneas.</p>
 
 <h2>Vídeo</h2>
 <p>Vídeo no Drive: </p>
-https://drive.google.com/file/d/1eHIh1nfqicTTv6n3bG0wVoVCTjvF96Yg/view?usp=sharing
+<p>https://drive.google.com/file/d/1eHIh1nfqicTTv6n3bG0wVoVCTjvF96Yg/view?usp=sharing</p>
 <p>Vídeo no YouTube</p>
-https://youtu.be/7FVu9zKdY_A
+<p>https://youtu.be/7FVu9zKdY_A</p>
 
 
 
