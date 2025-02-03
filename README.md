@@ -25,7 +25,7 @@ Há também um sistema de debounce para evitar leituras errôneas.</p>
   <li>Linguagem C;</li>
   <li>IDE Visual Studio Code;</li>
   <li>Pico SDK;</li>
-  <li>Placa BitDogLab;</li>
+  <li>Placa BitDogLab.</li>
 </ul>
 
 <h2>Vídeo</h2>
